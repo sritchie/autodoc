@@ -9,9 +9,7 @@
    [autodoc.gen-docs :only (gen-branch-docs)]
    [autodoc.build-html :only (make-all-pages)]
    [autodoc.copy-statics :only (copy-statics)])
-  (:import
-   [java.io File FileNotFoundException])
-  (:gen-class))
+  (:import [java.io File FileNotFoundException]))
 
 (defn make-doc-dir [] (make-parents (file (params :output-path) "foo")))
 
@@ -78,23 +76,14 @@
          (gen-branch-docs))
        (do 
          (if (nil? (params :namespaces-to-document))
-          (merge-params {:namespaces-to-document
-                         (map
-                          name
-                          (find-namespaces-in-dir
-                           (file (params :root)
-                                 (params :source-path))))}))
+           (merge-params {:namespaces-to-document
+                          (map
+                           name
+                           (find-namespaces-in-dir
+                            (file (params :root)
+                                  (params :source-path))))}))
          (if-let [cmd-sym ((set commands) (symbol (or cmd 'build-html)))]
            (apply (sym-to-var cmd-sym) cmd-args)
            (do
              (cl-format true "Unknown autodoc command: ~a~%" cmd)
              (help)))))))
-
-(defn -main [& args]
-  (if-let [[params args] (try 
-                          (process-command-line args)
-                          (catch RuntimeException e
-                            (println (.getMessage e))
-                            (prn)
-                            (help)))]
-    (apply autodoc params args)))

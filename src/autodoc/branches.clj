@@ -7,9 +7,8 @@
         [autodoc.build-html :only (branch-subdir)]
         [autodoc.doc-files :only (xform-tree)]
         [autodoc.pom-tools :only (get-version)])
-  
-  (import [java.io File]
-          [java.util.regex Pattern]))
+  (:import [java.io File]
+           [java.util.regex Pattern]))
 
 ;;; This was dropped from contrib in 1.3, I think
 (defn re-split [#^Pattern pattern string] 
